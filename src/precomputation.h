@@ -150,7 +150,7 @@ static inline float approximation(const Precomputation *precomputation, float x)
 
 
 // SIMD version of the approximation() function: values are processed by blocks of size PRECOMP_VECT_SIZE.
-// 'src_array' and 'dest_array' must be aligned on boundaries of PRECOMP_ALIGNMENT bits.
+// 'src_array' and 'dest_array' can overlap, and must be aligned on boundaries of PRECOMP_ALIGNMENT bits.
 static inline void approx_simd(const Precomputation *precomputation, float *dest_array, float *src_array)
 {
 	TYPE() x = FUN(_load_ps)(src_array);
