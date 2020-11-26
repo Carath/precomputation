@@ -5,6 +5,12 @@ by returning approximate values. Only the 'precomputation.c' and 'precomputation
 to be included in a given project.
 
 
+Version 1.6
+-----------
+
+Minor changes (reverting to 2 files for get_time).
+
+
 Version 1.5
 -----------
 
