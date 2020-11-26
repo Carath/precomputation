@@ -71,7 +71,8 @@ void freePrecomputation(Precomputation **precomputation)
 	if (!precomputation || !*precomputation)
 		return;
 
-	free((float*) ((*precomputation) -> precomputedValues));
+	if ((*precomputation) -> precomputedValues)
+		free((float*) ((*precomputation) -> precomputedValues));
 	free(*precomputation);
 	*precomputation = NULL;
 }
