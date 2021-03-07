@@ -19,3 +19,11 @@ double get_time(void)
 	return (double) GetTickCount() / 1000.;
 }
 #endif
+
+
+// Used to create RNG different seeds per nanosecond. A pointer to a memory block can
+// also be given to yield a unique seed per process, however it can be left to NULL.
+uint64_t create_seed(void *address)
+{
+	return (uint64_t) (get_time() * 1e9) + (uintptr_t) address;
+}

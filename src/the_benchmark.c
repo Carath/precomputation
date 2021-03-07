@@ -25,7 +25,7 @@
 #define ENABLE_WARMUP 1
 #define ROUNDS_WARMUP 10000000
 
-// Must be non-equal seeds!
+// Must be non-equal seeds, fixed for testing consistency!
 #define SEED_GEN 123
 #define SEED_TEST 456
 
@@ -89,7 +89,7 @@ static const float* generating_input_values(int test_number)
 
 	for (int i = 0; i < test_number; ++i)
 	{
-		inputs_array[i] = SIMUL_MIN + delta * rng32_float(&rng);
+		inputs_array[i] = SIMUL_MIN + delta * rng32_nextFloat(&rng);
 	}
 
 	return inputs_array;
@@ -129,7 +129,7 @@ void test_relative_error(const Precomputation *precomputation, float xmin, float
 
 	for (int i = 0; i < test_number; ++i)
 	{
-		float x = xmin + delta * rng32_float(&rng);
+		float x = xmin + delta * rng32_nextFloat(&rng);
 		float y = precomputation -> theFunction(x);
 		float approx = approximation(precomputation, x);
 		double relat_error = relative_error(y, approx);
