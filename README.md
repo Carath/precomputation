@@ -13,8 +13,7 @@ The other files are for demonstration purposes.
 
 ## Compilation
 
-Compiling is done by running ``` make ```. Note that when modifying header files, ``` make clean ``` must be run beforehand.
-Note that if using a custom made *makefile*, one should use as CFLAGS the option ``` -march=native ```, for enabling SSE and AVX instructions sets.
+Compiling is done by running ``` make ```. Note that if using a custom made *makefile*, one should use as CFLAGS the option ``` -march=native ```, for enabling SSE and AVX instructions sets.
 
 
 ## Runtime
