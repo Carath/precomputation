@@ -1,14 +1,12 @@
 # Precomputation
 
-Utility used to pre-compute values of a real-valued function, in order to speedup its evaluation
-by returning approximate values. Only the 'precomputation.c' and 'precomputation.h' files need
-to be included in a given project.
+*Utility used to pre-compute values of a real-valued function, in order to speedup its evaluation
+by returning approximate values.*
 
 
 ## How to use
 
-Copy the following files in your project: *precomputation.c* and *precomputation.h*.
-The other files are for demonstration purposes. Below is an example of approximating ``` expf ``` between -10 and 10 with 25000 samples (no SIMD):
+Copy the following files in your project: ``` precomputation.c ``` and ``` precomputation.h ```. The other files are for demonstration purposes. Below is an example of approximating ``` expf ``` between -10 and 10 with 25000 samples (no SIMD):
 
 ```C
 Precomputation *precomputation = initPrecomputation(expf, 25000, -10.f, 10.f);
