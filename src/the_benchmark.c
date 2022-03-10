@@ -1,5 +1,10 @@
 #define _ISOC11_SOURCE // for aligned_alloc(). _Must_ be placed at the file beginning!
 
+// Uncommenting what follows disable all assert in this file.
+// It can also be defined via a makefile when all source files are targeted:
+// #define NDEBUG
+
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h> // for 'fabs'
@@ -7,7 +12,8 @@
 #include "the_benchmark.h"
 #include "blocks_to_bench.h"
 #include "get_time.h"
-#include "rng32.h"
+// #include "rng32.h"
+#include "rng64.h" // rng64_nextInt32() faster than rng32_nextInt() here.
 
 
 // Settings:
@@ -32,8 +38,9 @@
 
 // Returns the relative error between a reference and another value.
 // Said error is in double precision, for better benchmark accuracy.
-inline double relative_error(float ref, float value)
+inline double relative_error(double ref, double value)
 {
+	assert(ref != 0); // cannot compute a relative error with a zero reference.
 	return fabs((value - ref) / ref);
 }
 
@@ -43,8 +50,7 @@ static double warmup_function(int rounds)
 {
 	double result = 0.123f;
 
-	for (int i = 0; i < rounds; ++i)
-	{
+	for (int i = 0; i < rounds; ++i) {
 		result *= cos(result);
 	}
 
@@ -63,7 +69,7 @@ static void warmup(int rounds)
 	double warmup_result = warmup_function(rounds);
 	double warmup_time_1 = get_time();
 
-	printf(" -> Time: %f s (result: %.3f)\n", warmup_time_1 - warmup_time_0, warmup_result);
+	printf(" -> Time: %.3f s (result: %.3f)\n", warmup_time_1 - warmup_time_0, warmup_result);
 }
 
 
@@ -82,14 +88,13 @@ static const float* generating_input_values(int test_number)
 		exit(EXIT_FAILURE);
 	}
 
-	rng32 rng;
-	rng32_init(&rng, SEED_GEN, 0);
+	rng64 rng;
+	rng64_init(&rng, SEED_GEN, 0);
 
 	const float delta = SIMUL_MAX - SIMUL_MIN;
 
-	for (int i = 0; i < test_number; ++i)
-	{
-		inputs_array[i] = SIMUL_MIN + delta * rng32_nextFloat(&rng);
+	for (int i = 0; i < test_number; ++i) {
+		inputs_array[i] = SIMUL_MIN + delta * rng64_nextFloat(&rng);
 	}
 
 	return inputs_array;
@@ -102,16 +107,17 @@ void benchmark(const Precomputation *precomputation, int test_number)
 	warmup(ROUNDS_WARMUP);
 
 	printf("\nGenerating input values:\n");
-	const float *inputs_array = generating_input_values(test_number);
+	const float *inputs_array = generating_input_values(test_number); // same values used in all tests.
 	float ram_usage = test_number * (sizeof(float) / (1024.f * 1024.f * 1024.f));
 	printf("-> Done. Using %.3f Go of RAM.\n", ram_usage);
 
-	float ref = benchmark_true_function(precomputation, inputs_array, test_number);
+	double ref_time = 0;
+	double ref = benchmark_true_function(precomputation, inputs_array, test_number, &ref_time);
+
+	benchmark_approximation(precomputation, inputs_array, test_number, ref, ref_time);
 
 	#if PRECOMP_VECT_SIZE > 1
-		benchmark_approx_simd(precomputation, inputs_array, test_number, ref);
-	#else
-		benchmark_approximation(precomputation, inputs_array, test_number, ref);
+		benchmark_approx_simd(precomputation, inputs_array, test_number, ref, ref_time);
 	#endif
 
 	free((float*) inputs_array);
@@ -121,15 +127,14 @@ void benchmark(const Precomputation *precomputation, int test_number)
 // Used to check the correctness of the approximation function:
 void test_relative_error(const Precomputation *precomputation, float xmin, float xmax, int test_number)
 {
-	rng32 rng;
-	rng32_init(&rng, SEED_TEST, 0);
+	rng64 rng;
+	rng64_init(&rng, SEED_TEST, 0);
 
-	const float delta = xmax - xmin;
-	double sum = 0., max = 0.;
+	double sum = 0., max = 0., delta = xmax - xmin;
 
 	for (int i = 0; i < test_number; ++i)
 	{
-		float x = xmin + delta * rng32_nextFloat(&rng);
+		double x = xmin + delta * rng64_nextDouble(&rng);
 		float y = precomputation -> theFunction(x);
 		float approx = approximation(precomputation, x);
 		double relat_error = relative_error(y, approx);
@@ -140,5 +145,5 @@ void test_relative_error(const Precomputation *precomputation, float xmin, float
 
 	sum /= test_number;
 
-	printf("\nGlobal relative error on preset interval:\n -> mean: %.3e, max: %.3e\n", sum, max);
+	printf("\nSampled relative error on preset interval:\n -> mean: %.3e, max: %.3e\n", sum, max);
 }

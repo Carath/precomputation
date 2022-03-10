@@ -27,21 +27,18 @@ float sigmoid(float x)
 #define to_approximate expf
 
 
-static Precomputation *precomputation;
-
 int main(void)
 {
-	int sample_number = 16384;
+	int sample_number = 25000;
 	float xmin = -10.f, xmax = 10.f;
 
 	// Adding an offset so that benchmark_test_number % 4 != 0 :
 	int benchmark_test_number = 1000000000 + 2; // the benchmark will use ~ 3,7 Go of RAM!
-	int verif_test_number = 100 * sample_number;
+	int verif_test_number = 100000000;
 
-	precomputation = initPrecomputation(to_approximate, sample_number, xmin, xmax);
+	Precomputation *precomputation = initPrecomputation(to_approximate, sample_number, xmin, xmax);
 
-	float x = 0.927f;
-
+	float x = 1.f;
 	float real_value = precomputation -> theFunction(x);
 	float approx = approximation(precomputation, x);
 

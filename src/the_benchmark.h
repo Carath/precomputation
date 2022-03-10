@@ -7,7 +7,7 @@
 
 // Returns the relative error between a reference and another value.
 // Said error is in double precision, for better benchmark accuracy.
-double relative_error(float ref, float value);
+double relative_error(double ref, double value);
 
 
 // Benchmarking the precomputation utility:
