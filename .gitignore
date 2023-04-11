@@ -37,3 +37,15 @@
 *.i*86
 *.x86_64
 *.hex
+
+# Other
+*.gcno
+*.bc
+*.i
+*.res
+
+# Directories
+obj/
+bin/
+build/
+target/

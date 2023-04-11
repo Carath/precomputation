@@ -35,7 +35,7 @@ extern "C" {
 
 
 // When using the SIMD version of the approximation function, data must be aligned on boundaries
-// of PRECOMP_ALIGNMENT bits. The way to do so depends on the data stack/heap location:
+// of PRECOMP_ALIGNMENT bytes. The way to do so depends on the data stack/heap location:
 
 // Stack -> float __attribute__ ((aligned(PRECOMP_ALIGNMENT))) data[SIZE];
 // Heap  -> float *data = (float*) aligned_alloc(PRECOMP_ALIGNMENT, size * sizeof(float));
@@ -150,7 +150,7 @@ static inline float approximation(const Precomputation *precomputation, float x)
 
 
 // SIMD version of the approximation() function: values are processed by blocks of size PRECOMP_VECT_SIZE.
-// 'src_array' and 'dest_array' can overlap, and must be aligned on boundaries of PRECOMP_ALIGNMENT bits.
+// 'src_array' and 'dest_array' can overlap, and must be aligned on boundaries of PRECOMP_ALIGNMENT bytes.
 static inline void approx_simd(const Precomputation *precomputation, float *dest_array, float *src_array)
 {
 	TYPE() x = FUN(_load_ps)(src_array);

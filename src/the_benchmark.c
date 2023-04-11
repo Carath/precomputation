@@ -76,7 +76,7 @@ static void warmup(int rounds)
 static const float* generating_input_values(int test_number)
 {
 	#if PRECOMP_VECT_SIZE > 1
-		printf("\n-> Data are aligned on %d-bit boundaries.\n", PRECOMP_ALIGNMENT);
+		printf("\n-> Data are aligned on %d-byte boundaries.\n", PRECOMP_ALIGNMENT);
 		float *inputs_array = (float*) aligned_alloc(PRECOMP_ALIGNMENT, test_number * sizeof(float));
 	#else
 		float *inputs_array = (float*) malloc(test_number * sizeof(float));

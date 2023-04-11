@@ -14,16 +14,24 @@ OBJ_DIR = obj
 ##########################################################
 # Compiler options:
 
+# To generate assembly along with the executable in the OBJ_DIR directory.
+GENERATE_ASM = -save-temps=$(OBJ_DIR)
+
 # For enabling SSE/AVX instructions sets:
 PROCESSOR_ARCH = -march=native
 
 # Multithreading API:
 # OPENMP = -fopenmp
 
+# Enabling Link Time Optimization:
+# USE_LTO = -flto
+
 # N.B: gcc for C, g++ for C++, alternative: clang.
 CC := gcc
+# CC := clang
+CFLAGS := -std=c99 -Wall -O2 $(PROCESSOR_ARCH) $(USE_LTO) $(OPENMP) $(GENERATE_ASM)
+CXXFLAGS :=
 CPPFLAGS :=
-CFLAGS := -std=c99 -Wall -O2 $(PROCESSOR_ARCH) $(OPENMP)
 LDFLAGS :=
 LDLIBS := $(OPENMP) -lm
 
@@ -50,14 +58,14 @@ all: $(EXE)
 
 # Linking the program:
 $(EXE): $(OBJ)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+	$(CC) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # Compiling the source files:
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) -MP -MMD $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) -MP -MMD $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 -include $(DEP)
 
 # Cleaning with 'make clean' the object files:
 clean:
-	rm -fv $(EXE) $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
+	rm -fv $(EXE) $(OBJ_DIR)/*

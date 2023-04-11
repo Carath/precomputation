@@ -18,7 +18,7 @@ freePrecomputation(&precomputation);
 ## Results
 
 The following benchmark has been done on the ``` expf ``` function between -10 and 10.
-Precision tests make use of 100M samples, and time tests use 3.725 GB of generated values aligned on 16-bit boundaries.
+Precision tests make use of 100M samples, and time tests use 3.9 GB of generated values aligned on 16-byte boundaries.
 Note that measured times depend greatly on the ratio between the samples number and the CPU cache size, here of 6 MB (Intel i5-7300HQ 2.50GHz).
 Values reported per cell are the speedup factor, and the mean relative error on the generated samples:
 

@@ -33,7 +33,7 @@ int main(void)
 	float xmin = -10.f, xmax = 10.f;
 
 	// Adding an offset so that benchmark_test_number % 4 != 0 :
-	int benchmark_test_number = 1000000000 + 2; // the benchmark will use ~ 3,7 Go of RAM!
+	int benchmark_test_number = 1000000000 + 2; // the benchmark will use ~ 3,9 GB of RAM!
 	int verif_test_number = 100000000;
 
 	Precomputation *precomputation = initPrecomputation(to_approximate, sample_number, xmin, xmax);
